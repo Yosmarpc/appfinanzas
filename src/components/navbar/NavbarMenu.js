@@ -7,7 +7,7 @@ const NavbarMenu = () => {
   return (
     <div>
 
-  <Navbar bg="dark" expand="lg" variant="dark">
+  <Navbar  expand="lg" variant="dark" style={{ backgroundColor: '#042f6c', color: '#fff' }}>
   <Container fluid>
   <Navbar.Brand href="/" className="text-white">
         <img
