@@ -28,7 +28,7 @@ const FormCalculadora = (dataCal) => {
 
   return (
     <div>
-      <Card className="my-3">
+      <Card className="shadow-lg p-3 mb-5 bg-white rounded my-4">
 
         <Card.Body>
           <div className="row my-3">
