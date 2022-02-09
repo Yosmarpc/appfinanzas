@@ -26,8 +26,8 @@ const NavbarMenu = () => {
         style={{ maxHeight: '100px' }}
         navbarScroll
       >
-        <Nav.Link href="/" className="text-caption">Home</Nav.Link>
-        
+{/*         <Nav.Link href="https://yosmarweb.com/" className="text-caption">Yosmar Hinestroza</Nav.Link>
+ */}        
       </Nav>
       <Form className="d-flex">
        {/*  <FormControl
@@ -35,8 +35,9 @@ const NavbarMenu = () => {
           placeholder="Search"
           className="me-2"
           aria-label="Search"
-        /> */}
-        <Button variant="outline-primary">Calculadora</Button>
+        /> 
+        <Button variant="outline-primary">Perfil</Button>*/}
+        <Nav.Link href="https://yosmarweb.com/" className="text-caption text-white" target="_blank">Yosmar Hinestroza</Nav.Link>
       </Form>
     </Navbar.Collapse>
   </Container>

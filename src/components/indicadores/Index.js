@@ -2,7 +2,8 @@
 
 import moment from "moment";
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Spinner } from "react-bootstrap";
+import { currency } from "../../helpers";
 import ModalHistorial from "../modales/ModalHistorial";
 import "./Styles.scss";
 const Index = () => {
@@ -19,6 +20,7 @@ const Index = () => {
     weekdaysMin: 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_')
   }
   );
+
 
   React.useEffect(() => {
     handleGetApi();
@@ -39,28 +41,29 @@ const Index = () => {
   };
 
   return (
-    <div>
-      <section className="container my-4">
+    <div style={{ marginTop: "-6.4rem" }}>
+      <section className="container my-1">
      <ModalHistorial show={modalShow}
         onHide={() => setModalShow(false)}
       />
-  <div className="row my-3 shadow-lg p-3 mb-5 bg-white rounded">
-  <Card className="my-4">
+  <div className="row my-3 shadow p-3 mb-5 bg-white rounded" >
+    <Card className="my-4">
       <Card.Body>
       <div className="text-left my-3 text-dark">
           <span><b>Fuente data</b> <a href="https://mindicador.cl/" target="_blank" title="mindicador.cl" alt="mindicador.cl" rel="noreferrer"> mindicador.cl</a> </span>
             <span><b>Fecha Actualizada</b> {moment(dataIndicador?.fecha).format('LLLL')}</span>
-            
-        </div>
+      </div>
       </Card.Body>
       </Card>
+      {!loadings ?
       <div className="row">
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3">
             <div className="card-body text-dark">
+              {dataIndicador?.dolar?.valor ?
               <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.dolar?.valor}</h5>
+                <h5 className="card-title fs-2"> {currency(dataIndicador?.dolar?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.dolar?.nombre}
               </p>
@@ -71,22 +74,25 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.dolar?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+               <img src="/img/logos/dolar-logo.svg" alt={dataIndicador?.dolar?.nombre} title={dataIndicador?.dolar?.nombre} width="100rem" height="100rem" />
                 {/* <button  className="btn btn-primary btn-sm bg-dark">
                 Historial
                 </button> */}
                 </div>
 
-              </div>
+              </div>:
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.dolar_intercambio?.valor ?
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.dolar_intercambio?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.dolar_intercambio?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.dolar_intercambio?.nombre}
               </p>
@@ -97,21 +103,25 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.dolar_intercambio?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/dolar-logo.svg" alt={dataIndicador?.dolar_intercambio?.nombre} title={dataIndicador?.dolar_intercambio?.nombre} width="100rem" height="100rem" />
                {/*  <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
             </div>
+            :
+            <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
           </div>
         </div>
         </div>
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.euro?.valor ?
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.euro?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.euro?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.euro?.nombre}
               </p>
@@ -122,22 +132,26 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.euro?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/euro-2.svg" alt={dataIndicador?.euro?.nombre} title={dataIndicador?.euro?.nombre} width="100rem" height="100rem" />
                {/*  <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.bitcoin?.valor ?
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.bitcoin?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.bitcoin?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.bitcoin?.nombre}
               </p>
@@ -148,25 +162,28 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.bitcoin?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/bitcoin.svg" alt={dataIndicador?.bitcoin?.nombre} title={dataIndicador?.bitcoin?.nombre} width="100rem" height="100rem" />
                {/*  <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
-      
         {stateAll ?
         <>
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.uf?.valor ?
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.uf?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.uf?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.uf?.nombre}
               </p>
@@ -177,22 +194,26 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.uf?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/dolar-logo.svg" alt={dataIndicador?.uf?.nombre} title={dataIndicador?.uf?.nombre} width="100rem" height="100rem" />
                {/*  <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.utm?.valor ?
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.utm?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.utm?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.utm?.nombre}
               </p>
@@ -203,13 +224,16 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.utm?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/dolar-logo.svg" alt={dataIndicador?.utm?.nombre} title={dataIndicador?.utm?.nombre} width="100rem" height="100rem" />
                {/*  <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
@@ -217,9 +241,10 @@ const Index = () => {
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.ivp?.valor ? 
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.ivp?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.ivp?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.ivp?.nombre}
               </p>
@@ -230,13 +255,16 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.ivp?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/dolar-logo.svg" alt={dataIndicador?.ivp?.nombre} title={dataIndicador?.ivp?.nombre} width="100rem" height="100rem" />
              {/*    <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
@@ -244,9 +272,10 @@ const Index = () => {
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.ipc?.valor ? 
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.ipc?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.ipc?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.ipc?.nombre}
               </p>
@@ -257,13 +286,16 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.ipc?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/percent-sign-flat-design-long-shadow-icon-percentage-shop-discount-symbol-silhouette-illustration-vector.jpg" alt={dataIndicador?.ipc?.nombre} title={dataIndicador?.ipc?.nombre} width="100rem" height="100rem" />
                 {/* <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
@@ -272,9 +304,10 @@ const Index = () => {
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+              {dataIndicador?.imacec?.valor ?
             <div className="row">
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.imacec?.valor}</h5>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
+                <h5 className="card-title fs-2">{currency(dataIndicador?.imacec?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.imacec?.nombre}
               </p>
@@ -285,22 +318,26 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.imacec?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/percent-sign-flat-design-long-shadow-icon-percentage-shop-discount-symbol-silhouette-illustration-vector.jpg" alt={dataIndicador?.imacec?.nombre} title={dataIndicador?.imacec?.nombre} width="100rem" height="100rem" />
                {/*  <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
         <div className="col-xs-6 col-md-6 col-lg-6 col-xl-6">
           <div className="card mb-3 ">
             <div className="card-body text-dark">
+        {dataIndicador?.tpm?.valor ?
             <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <h5 className="card-title fs-2">{dataIndicador?.tpm?.valor}</h5>
+                <h5 className="card-title fs-2">{currency(dataIndicador?.tpm?.valor)}</h5>
               <p className="card-text fs-6 fw-bold">
               {dataIndicador?.tpm?.nombre}
               </p>
@@ -311,13 +348,16 @@ const Index = () => {
                 <b>Última Actualización:</b>  {moment(dataIndicador?.tpm?.fecha).format('DD-MM-YYYY')}
               </p>
                 </div>
-                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 my-4" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src="/img/logos/percent-sign-flat-design-long-shadow-icon-percentage-shop-discount-symbol-silhouette-illustration-vector.jpg" alt={dataIndicador?.tpm?.nombre} title={dataIndicador?.tpm?.nombre} width="100rem" height="100rem" />
                 {/* <button  className="btn btn-primary btn-sm bg-dark"  >
                 Historial
               </button> */}
                 </div>
 
               </div>
+              :
+               <div className="text-center"> <Spinner animation="grow" variant="secondary" /></div> }
             </div>
           </div>
         </div>
@@ -330,6 +370,7 @@ const Index = () => {
         }
         </div>
       </div>
+      : <div className="text-center"><Spinner animation="grow" variant="secondary" /> </div>}
       </div>
       </section>
      

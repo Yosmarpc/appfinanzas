@@ -1,19 +1,19 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-  import { Line } from 'react-chartjs-2';
-import { Card, Col, Form, Row } from 'react-bootstrap';
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { Card, Col, Form, Row, Spinner } from 'react-bootstrap';
 import moment from 'moment';
 const { faker } = require('@faker-js/faker');
-const ListTipo =[
+const ListTipo = [
   {
     "id": '01',
     "codigo": 'dolar',
@@ -73,7 +73,8 @@ const Graficos = () => {
 
   const urlApi = 'https://mindicador.cl/api'
   const [dataTipo, setDataTipo] = useState();
-  
+  const [loadingGrafico, setloadingGrafico] = useState(false);
+
   const [filterTipo, setFilterTipo] = useState({
     tipo: 'dolar',
     anno: 2022
@@ -81,8 +82,8 @@ const Graficos = () => {
 
   const { tipo, anno } = filterTipo;
 
-  const hendleFilter =(e)=>{
-      setFilterTipo({...filterTipo, [e.target.name]: e.target.value});
+  const hendleFilter = (e) => {
+    setFilterTipo({ ...filterTipo, [e.target.name]: e.target.value });
   }
 
   useEffect(() => {
@@ -90,12 +91,17 @@ const Graficos = () => {
   }, [tipo, anno])
 
 
-  const getIndicadorTipo =(tipo)=>{
+  const getIndicadorTipo = (tipo) => {
+    setloadingGrafico(true)
     fetch(`${urlApi}/${tipo}/${anno}`)
-          .then((response) => response.json())
-          .then(data => setDataTipo(data))
-          .catch((error) => console.error(error.message))
+      .then((response) => response.json())
+      .then(data => setDataTipo(data))
+      .then(setTimeout(()=>{ setloadingGrafico(false)},1000))
+      .catch((error) => console.error(error.message))
   }
+  const dataOrden = dataTipo?.serie.sort((a, b) => {
+    return moment(a.fecha).format('YYYYMMDD') - moment(b.fecha).format('YYYYMMDD');
+  });
 
   ChartJS.register(
     CategoryScale,
@@ -106,9 +112,13 @@ const Graficos = () => {
     Tooltip,
     Legend
   );
-  
+
   const options = {
     responsive: true,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
     plugins: {
       legend: {
         position: 'top',
@@ -117,13 +127,28 @@ const Graficos = () => {
         display: true,
         text: 'Historial por dia',
       },
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+        },
+        /*    y1: {
+             type: 'bar',
+             display: true,
+             position: 'left',
+             grid: {
+               drawOnChartArea: true,
+             },
+           }, */
+      },
     },
   };
 
-  const labels =  dataTipo && dataTipo?.serie.length > 0 ?  dataTipo?.serie.map((dLebel, index)=>(
+  const labels = dataTipo && dataTipo?.serie.length > 0 ? dataTipo?.serie.map((dLebel, index) => (
     `${moment(dLebel?.fecha).format('DD.MM.YYYY')}`
-  )): []
-  const datas = dataTipo && dataTipo?.serie.length > 0 ? dataTipo?.serie.map((ddata, index)=>(
+  )) : []
+  const datas = dataTipo && dataTipo?.serie.length > 0 ? dataTipo?.serie.map((ddata, index) => (
     ddata?.valor
   )) : []
   const data = {
@@ -132,20 +157,22 @@ const Graficos = () => {
     datasets: [
       {
         label: tipo,
+        fill: true,
         labels: labels,
         data: datas,
         //data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        yAxisID: 'y',
       },
     ],
   };
 
-    return (
-        <div>
-          <Card className="shadow-lg p-3 mb-5 bg-white rounded">
-            <Card.Body>
-            <div className="row my-3">
+  return (
+    <div>
+      <Card className="shadow p-3 mb-5 bg-white rounded">
+        <Card.Body>
+          <div className="row my-3">
             <Form>
               <Row className="align-items-center">
                 <Col>
@@ -155,33 +182,36 @@ const Graficos = () => {
                     value={tipo}
                     onChange={hendleFilter}
                   >
-                    {ListTipo.map((data, index)=>(
+                    {ListTipo.map((data, index) => (
                       <option value={data.codigo} key={index + 1}>{data.name}</option>
                     ))}
 
                   </Form.Select>
                 </Col>
                 <Col>
-                <Form.Select
+                  <Form.Select
                     size="lg"
                     name="anno"
                     value={anno}
                     onChange={hendleFilter}
                   >
-                      <option value="2022">2022</option>
-                      <option value="2021">2021</option>
-                      <option value="2020">2020</option>
-                      <option value="2019">2019</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
                   </Form.Select>
                 </Col>
-                </Row>
-                </Form>
-                </div>
-            <Line options={options} data={data}/>
-            </Card.Body>
-          </Card>
-        </div>
-    )
+              </Row>
+            </Form>
+          </div>
+          {!loadingGrafico ?
+            <Line options={options} data={data} />
+            : <div className="text-center"><Spinner animation="grow" variant="secondary" /></div>}
+        </Card.Body>
+      </Card>
+    </div>
+  )
 }
 
 export default Graficos
